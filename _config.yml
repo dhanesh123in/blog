@@ -24,9 +24,10 @@ description: >- # this means to ignore newlines until "baseurl:"
    Blog posts on technology, programming, math and AI
 baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "https://dhanesh123in.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: dhanesh123us
-github_username:  dhanesh123in
+#twitter_username: dhanesh123us
 linkedin_username: dhanesh123us
+github_username:  dhanesh123in
+
 
 # Build settings
 theme: minima
