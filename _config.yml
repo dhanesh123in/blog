@@ -31,7 +31,7 @@ url: "https://dhanesh123in.github.io" # the base hostname & protocol for your si
 
 # Build settings
 #theme: minima
-theme: jekyll-theme-minimal
+theme: jekyll-theme-cayman
 plugins:
   - jekyll-feed
   - jekyll-paginate
