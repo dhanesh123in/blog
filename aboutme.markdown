@@ -5,7 +5,7 @@ title: About Me
 
 <h2>About Me</h2>
 
-I am currently at Genpact Digital leading an ML Platform team that is developing an MLOps platform. I previously held managerial roles at data sciences and data engineering organizations at Truecaller and [24]7.ai. I started my career as a research scientist at General Motors R&D, and also had couple of stints with Hewlett Packard and Marketics (now WNS) as an analytics professional.
+I am currently at Genpact Digital leading an ML Platform team that is developing an MLOps platform. I previously held managerial roles in data sciences and data engineering organizations at Truecaller and [24]7.ai. I started my career as a research scientist at General Motors R&D, and also had couple of stints with Hewlett Packard and Marketics (now WNS) as an analytics professional.
 
 I have a Ph.D. from University of Notre Dame in Mechanical Engineering. My thesis was in the field on reliability-based optimization for multidisciplinary systems. I obtained my bachelors from Indian Institue of Technology, Madras (Chennai) in Mechanical Engineering.
 

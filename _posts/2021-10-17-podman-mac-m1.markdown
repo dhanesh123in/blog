@@ -5,7 +5,7 @@ author: Dhanesh Padmanabhan
 date:   2021-10-17
 tags: podman apple-silicon M1
 ---
-If you have a Mac M1 and have been struggling to get `podman`, a popular alternative to `docker-desktop` working, this post might be useful for you.
+If you have a Mac M1 and have been struggling to get `podman`, a popular alternative to `docker-desktop` working, this post might be useful to you.
 
 Here are the steps needed:
 1. Ensure you have set the architecture on your machine to `arm64`. You can do that using a command `env /usr/bin/arch -arm64 /bin/zsh --login`. Type `arch` again to ensure you get `arm64`
