@@ -5,15 +5,22 @@ author: Dhanesh Padmanabhan
 date:   2022-02-08
 tags: SQLAlchemy ORM
 ---
-Object Relationship Mapping (ORM) is a common approach to writing services interacting with relational databases in an object oriented fashion. Hibernate is a very popular ORM tool for Java. SQLAlchemy is the popular choice for Python. 
 
-In this blog post, we will look at SQLAlchemy applied to a real life example where I had to create a database of community memmbers in the community I live in. The data was being maintained in a spreadsheet where all the membership information was maintained for every property (household) in our community. This spreadsheet contained information of owners of the property, and also contained the history of how properties exchanged hands with new members coming in the system. I will present a simplified version of the problem to illustrate the cool features that SQLAlchemy provides. We will have 3 tables in our database for this example:
+Object Relationship Mapping (ORM) is a common approach for writing services interacting with relational databases in an object oriented fashion. Hibernate is a very popular ORM tool for Java. SQLAlchemy is the popular choice for Python. 
 
-1. `members` - this will capture each member name, contact details and also have a mapping to the primary member in the household. 
-1. `properties` - this will consist of details of all properties in the community, with their description
+<h3>The Problem Statement</h3>
+
+In this blog post, we will look at SQLAlchemy applied to a real life example where I had to create a database of members in the community I live in. A member here is defined as someone who belongs to a household that owns a property in the community. The data was being maintained in a spreadsheet where all the membership information was maintained for every property in our community. This spreadsheet also contained the history of how properties exchanged hands with new members coming in the system. 
+
+<h3>The Table Definitions</h3>
+
+I will present a simplified version of the problem to illustrate the cool features that SQLAlchemy provides. We will have 3 tables in our database for this example:
+
+1. `members` - this will capture each member name, contact details and also have a mapping to the primary member in the household.
+1. `properties` - this will consist of details of all properties in the community, with their description.
 1. `memberships` - this will consist of the membership information for properties with membership start date and details of the primary member.
 
-The code for this is below:
+The code for defining these tables with all the entity relationships we need is given below:
 
 ```python
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
@@ -68,12 +75,26 @@ class Memberships(Base):
             back_populates="membership_info")
 ```
 
-You can see how the classes contain the sqlite table information, the column definitions and Foreign Key-Primary Key constraints across tables. To create these tables with these constraints, all we need to do is execute the following commands:
+Ofcourse there is a lot going on here. We basically have three classes mapping to the three tables. Each class defines all the columns, their datatypes and the primary & foreign keys. There are also relationships defined in each of these classes, which I will describe in a bit. In this example, I have selected sqlite as the database.
+
+To create these tables with these constraints, all we need to do is execute the following commands:
 
 ```python
 Base.metadata.drop_all(engine)
 Base.metadata.create_all()
 ```
+
+<h3>Relationships - Deep Dive</h3>
+
+Let's delve a bit deeper into the relationships before we do some example database operations. The variables that are defined as relationships return objects of associated objects of other table entities. For example, `Members.associated_members` will give a list of `Members` objects corresponding to the members associated with the primary member, and similarly `Properties.membership_info` will return the `Memberships` object corresponding to the property. 
+
+The relationships work in tandem with a Foreign Key-Primary Key relationship. The relationship variables can be defined either on the class consisting the primary key or the class consisting the foreign key, or on both. The nature of relationship is one-to-many, or one-to-one when defined on the class with primary key, and it is many-to-one when defined on the table with foreign key. The associated relationships can be provided using `back_populates` option. The `useList` option can turned on or off to control the one-to-many or one-to-one setting.
+
+In our example, `Memberships` class has two foreign keys mapping to `members.id` and `properties.id`. `Properties` class has a one-to-one relationship with `Memberships` class, so we have only one membership record per property. This is achieved with  `uselist=False` option in `memership_info` relationship. This relationship back populates the `for_property` relationship deinfed in `Memberships` class. Similarly, `associated_properties` in `Members` class and `primary_member` in `Memberships` class work in tandem.
+
+There is a special case in the `Members` class, where there is a self-referential mapping between `primary_member_id` and `id` defined as foreign key. This lets us model hierarchical data where we have all members of a household mapped to a primary member of that household. There is a one-to-many relationship `associated_members` that will let us define all associated members to a primary member. 
+
+<h3>Database Operations</h3>
 
 To start performing database operations, we will need to create a session like below:
 
@@ -83,7 +104,7 @@ Session = sessionmaker(engine)
 session = Session()
 ```
 
-We will also define these utility functions to view the contents of each table, as we start filling these tables.
+We can use this session object to then do CRUD operations on these tables. We will also define a few utility functions to view the contents of each table.
 
 ```python
 def print_members():
@@ -101,14 +122,6 @@ def print_memberships():
     for instance in session.query(Memberships):
         print(instance.id, instance.pid, instance.primary_member_id, instance.membership_date)
 ```
-
-We will delve a bit deeper into the relationships before we do some example database operations. The variables that are defined as relationships return objects of associated objects of other table entities. For example, `Members.associated_members` will give a list of `Members` objects corresponding to the members associated with the primary member, and similarly `Properties.membership_info` will return the `Memberships` object corresponding to the property. 
-
-The relationships work in tandem with a Foreign Key-Primary Key relationship. The relationship variables can be defined both on the class consisting the primary key and the class consisting the foreign key. The nature of relationship is one-to-many, or one-to-one when defined on the class with primary key, and it is many-to-one when defined on the table with foreign key. The associated relationships can be provided using `back_populates` option. The `useList` option can turned on or off to control the one-to-many or one-to-one setting.
-
-In our example, `Memberships` class has two foreign keys mapping to `members.id` and `properties.id`. `Properties` class has a one-to-one relationship with `Memberships` class, so we have only one membership record per property. This is achieved with  `uselist=False` option in `memership_info` relationship. This relationship back populates the `for_property` relationship deinfed in `Memberships` class. Similarly, `associated_properties` in `Members` class and `primary_member` in `Memberships` class work in tandem.
-
-There is a special case in the `Members` class, where there is a self-referential mapping between `primary_member_id` and `id` defined as foreign key. This lets us model hierarchical data where we have all members of a household mapped to a primary member of that household. There is a one-to-many relationship `associated_members` that will let us define all associated members to a primary member. 
 
 Now let us populate the tables with an example consisting of two households with three members each but with three properties, with one household owning two of these properties and remaining one owned by the other household. 
 
@@ -161,6 +174,8 @@ This will output the following:
 
 In the `session.add_all` command, we only needed to include the membership objects and all the parent entity records for members and properties automatically got inserted in the database along with membership records. This is indeed quite nice.
 
+<h3>Delete Operations with CASCADE Options</h3>
+
 If you notice all the foreign keys have `ondelete="CASCADE"` option defined, and the corresponding relationships defined on the class with the mapping primary key with options `cascade="all, delete, delete-orphan", passive_deletes=False`. As a result of this, if there is a change in primary member of a property, it will result in creation of a new membership record, and deletion of the old one, as illustrated below where we change the primary member of property `p2` from `m2` to `m1`:
 
 ```python
@@ -206,7 +221,9 @@ This will output the following:
 
 As you can see all the records associated with `primary_member_id=1` is deleted in `members` and `memberships` tables.
 
-SQLAlchemy provides a nice and easy way to manipulate database objects through ORM, and also provides nice constructs for defining entity relationships, and flexible ways of creating/updating/deleting database records in a consistent manner. 
+<h3>Conclusion</h3>
+
+SQLAlchemy provides a nice and easy way to manipulate database objects through Object Relationship Mapping, and also provides nice constructs for defining entity relationships, and flexible ways of creating/updating/deleting database records in a consistent manner. 
 
 So, this concludes the blog post. I hope you found this useful. Do drop me a note, if you have any comments/suggestions.
 

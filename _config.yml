@@ -32,9 +32,11 @@ github_username:  dhanesh123in
 # Build settings
 #theme: minima
 theme: jekyll-theme-minimal
+#remote_theme: pages-themes/minimal@v0.2.0
 plugins:
   - jekyll-feed
   - jekyll-paginate
+#  - jekyll-remote-theme
 show_excerpts: true
 # show_downloads: true
 
