@@ -34,6 +34,7 @@ github_username:  dhanesh123in
 theme: jekyll-theme-minimal
 #remote_theme: pages-themes/minimal@v0.2.0
 plugins:
+  - jekyll-seo-tag
   - jekyll-feed
   - jekyll-paginate
 #  - jekyll-remote-theme
