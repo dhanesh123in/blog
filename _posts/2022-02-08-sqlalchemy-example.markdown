@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "Object Relationship Mapping with SQLAlchemy"
+title:  "Object-Relational Mapping with SQLAlchemy"
 author: Dhanesh Padmanabhan
 date:   2022-02-08
 tags: SQLAlchemy ORM
 ---
 
-Object Relationship Mapping (ORM) is a common approach for writing services interacting with relational databases in an object oriented fashion. Hibernate is a very popular ORM tool for Java. SQLAlchemy is the popular choice for Python. 
+Object-Relational Mapping (ORM) is a common approach for writing services interacting with relational databases in an object oriented fashion. Hibernate is a very popular ORM tool for Java. SQLAlchemy is the popular choice for Python. 
 
 <h3>The Problem Statement</h3>
 
@@ -223,7 +223,7 @@ As you can see all the records associated with `primary_member_id=1` is deleted 
 
 <h3>Conclusion</h3>
 
-SQLAlchemy provides a nice and easy way to manipulate database objects through Object Relationship Mapping, and also provides nice constructs for defining entity relationships, and flexible ways of creating/updating/deleting database records in a consistent manner. 
+SQLAlchemy provides a nice and easy way to manipulate database objects through Object-Relational Mapping, and also provides nice constructs for defining entity relationships, and flexible ways of creating/updating/deleting database records in a consistent manner. 
 
 So, this concludes the blog post. I hope you found this useful. Do drop me a note, if you have any comments/suggestions.
 
